@@ -1,0 +1,41 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  automated-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run API tests with coverage
+        run: |
+          mkdir -p reports
+          pytest -m "not ui" --cov=app --cov-report=term-missing --cov-report=xml:reports/coverage.xml --html=reports/api-tests.html --self-contained-html
+
+      - name: Run Selenium UI tests
+        run: |
+          pytest -m ui --html=reports/ui-tests.html --self-contained-html
+
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-evidence
+          path: reports/
+

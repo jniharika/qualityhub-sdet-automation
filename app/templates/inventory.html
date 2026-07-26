@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QualityHub Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">SDET AUTOMATION PORTFOLIO</p>
+      <h1>QualityHub Inventory</h1>
+      <p>A compact application built to demonstrate production-minded API and UI testing.</p>
+    </header>
+
+    <main>
+      <section class="panel" aria-labelledby="add-item-heading">
+        <h2 id="add-item-heading">Add inventory item</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert {{ category }}" role="alert">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('qualityhub.create_item_from_form') }}">
+          <label>
+            Item name
+            <input name="name" id="name" maxlength="120" required>
+          </label>
+          <label>
+            Quantity
+            <input name="quantity" id="quantity" type="number" min="0" required>
+          </label>
+          <label>
+            Status
+            <select name="status" id="status">
+              <option value="active">Active</option>
+              <option value="discontinued">Discontinued</option>
+            </select>
+          </label>
+          <button type="submit">Add item</button>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="inventory-heading">
+        <div class="section-heading">
+          <h2 id="inventory-heading">Current inventory</h2>
+          <span class="count" data-testid="item-count">{{ items|length }} items</span>
+        </div>
+        {% if items %}
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+                <tr data-testid="inventory-row">
+                  <td>{{ item.id }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td><span class="badge {{ item.status }}">{{ item.status }}</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p data-testid="empty-state">No inventory items yet.</p>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>
+

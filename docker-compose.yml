@@ -1,0 +1,14 @@
+services:
+  qualityhub:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      QUALITYHUB_DATABASE: /data/qualityhub.db
+      QUALITYHUB_SECRET_KEY: local-compose-secret
+    volumes:
+      - qualityhub-data:/data
+
+volumes:
+  qualityhub-data:
+

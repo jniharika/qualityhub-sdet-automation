@@ -1,0 +1,8 @@
+-r requirements.txt
+locust>=2.20,<3
+pytest>=8,<10
+pytest-cov>=5,<8
+pytest-html>=4,<5
+requests>=2.31,<3
+selenium>=4.9,<5
+
